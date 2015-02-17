@@ -1,0 +1,83 @@
+<html> 
+<head>
+<script type="text/javascript">
+<!-- -->
+function startTime()//вычисление строкового представления времени и координат
+{
+if (!window.myX) {window.myX=0; window.myY=0}//установим стартовые значения переменных
+var tm=new Date();//создаем объект дата 
+var h=format(tm.getHours());//час
+var m=format(tm.getMinutes());//минута
+var s=format(tm.getSeconds());//секунда
+var text=h+":"+m+":"+s+"; mouse x="+window.myX+", mouse y="+window.myY+";";//сложили строчку для вывода
+window.status=text;//вывод в строку статуса
+document.getElementById('txt').innerHTML=text;//вывод в дополнительное поле
+setTimeout('startTime()',200);// отложенный запуск (рекурсия) 
+}
+function format(i)//добавляем 0 в начале для 01..09
+{
+if (i<10) {i="0" + i;}
+return i;
+}
+/*при событии onmousemove запоминаем координаты, потом выведем их в startTime()*/
+document.onmousemove = function(e) {
+  e = e || window.event;
+  myX=e.clientX;
+  myY=e.clientY;
+}
+
+</script> 
+</head>
+<!--при загрузке запускаем startTime()-->
+<body onload="startTime()">
+<script>
+function func(field, needtoopen)//проверка коллекции элементов
+	{
+	var nochek=true;
+	document.getElementById('lal').innerHTML ="";//очистим поле вывода	
+	for(i=0;i<field.length;i++)//переберем элементы коллекции
+		{
+		if(field[i].checked)//если элемент выбран
+		{
+		if (needtoopen) var newWin = window.open(field[i].value, field[i].id);//сразу откроем окно по ссылке, если needtoopen	
+		else
+		{
+		nochek=false;// нажатые есть
+		document.getElementById('lal').innerHTML += field[i].value+"<br/>";// добавим выбранный элемент в текстовую строку
+		}
+		}
+		}
+	if (nochek) {document.getElementById('lal').innerHTML ="<br/>";}//если нажатых нет очистим текстовую стоку	
+	}
+</script>
+ <!--форма со списком ссылок, обработка изменений func(openlist, false);needtoopen=false без открытия страниц-->
+<form name="openlist" onChange="func(openlist, false);">
+<table border="1" align = "center">
+<tr>
+	<td><input id="cb1" type="checkbox" value="http://yandex.ru/"></td><td><label for="cb1">http://yandex.ru/</label></td>
+</tr>
+<tr>
+	<td><input id="cb2" type="checkbox" value="http://google.com/"></td><td><label for="cb2">http://google.com/</label></td>
+</tr>
+<tr>
+	<td><input id="cb3" type="checkbox" value="http://rambler.ru/"></td><td><label for="cb3">http://rambler.ru/</label></td>
+</tr>
+<tr>
+	<td><input id="cb4" type="checkbox" value="http://php.net/"></td><td><label for="cb4">http://php.net/</label></td>
+</tr>
+<tr>
+	<td><input id="cb5" type="checkbox" value="http://w3.org/"></td><td><label for="cb5">http://w3.org/</label></td>
+</tr>
+<tr>
+	<td></td><td><label id="lal"><br/></label></td>
+</tr>
+<tr>
+ <!--кнопка по нажатию которой func(openlist, true); откроем страницы по ссылкам-->
+	<td></td><td><INPUT TYPE=button VALUE="                    Ok                    " onclick="func(openlist, true);"></td>
+</tr>
+</table>
+</form>
+<!--если нет строки статуса то поможет этот элемент-->
+<p id="txt"> </p> 
+</body> 
+</html>
